@@ -12,9 +12,9 @@ class Docker{
     }
 
     //THis method will be used to build the Application
-    def buildApp(){
+    def buildApp(appName){
         jenkins.sh """#!/bin/bash
-        echo "This stage will build the Eureka application"
+        echo "This stage will build the $appName application"
         mvn clean package -DskipTests=true
         """ 
     }

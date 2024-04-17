@@ -8,7 +8,7 @@ def call(Map pipelineParams) {
         label 'k8s-slave'
     }
     environment{
-        APPLICATION_NAME = 'eureka'
+        APPLICATION_NAME = "${pipelineParams.appName}"
         POM_VERSION = readMavenPom().getVersion()
         POM_PACKAGING = readMavenPom().getPackaging()
 
@@ -74,7 +74,7 @@ def call(Map pipelineParams) {
                 script{
                     echo "********** Executing Addition Method **********"
                     println docker.add(4,5)
-                    docker.buildApp()
+                    docker.buildApp("${env.APPLICATION_NAME}")
                 }
             }
         }
