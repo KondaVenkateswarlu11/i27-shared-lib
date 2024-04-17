@@ -1,5 +1,6 @@
 import com.i27academy.builds.Docker
-import com.i27academy.k8s.K8s
+import com.i27academy.k8s.k8s 
+//both are small k8s
 
 
 def call(Map pipelineParams) {
