@@ -1,7 +1,11 @@
 import com.i27academy.builds.Docker
+import com.i27academy.k8s.K8s
+
+library ('com.i27academy.slb')
 
 def call(Map pipelineParams) {
     Docker docker = new Docker(this)
+    K8s k8s = new K8s(this)
 
     pipeline{
         agent{
@@ -17,6 +21,9 @@ def call(Map pipelineParams) {
 
             SONAR_URL = "http://54.236.253.51:9000/" 
             SONAR_TOKEN = credentials('Sonar_Token')
+
+            EKS_CLUSTER_NAME = "clothingCluster"
+            EKS_ZONE = "us-east-1"
 
         }
         parameters{
@@ -61,7 +68,16 @@ def call(Map pipelineParams) {
             maven 'Maven-3.8.8'
             jdk 'JDK-17'
         }
+
         stages{
+            stage("Authenticating to Aws cloud EKS"){
+                steps{
+                    echo "Executing in the Aws cloud Auth Stage"
+                    script{
+                        k8s.auth_login_eks("${env.EKS_CLUSTER_NAME}", "${env.EKS_ZONE}")
+                    }
+                }
+            }
             stage("Build"){
                 when{
                     anyOf{
@@ -239,10 +255,6 @@ def call(Map pipelineParams) {
     }
 }
 
-
-
-
-
 //This method will build the image and push it to registry
 def dockerBuildandPush(){
     return{
@@ -312,44 +324,4 @@ def imageValidation(){
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-
-
-
-
-
-
-
-
-
-//venkat3cs/newubuntu:tagname(Dockerhub example repo of my account)
-// --force-rm --no-cache (Everytime build chesthunnappudu first nundi build cheyyi cache techukovadhu)
-// --pull --rm=true (remote =true)
-//While checking the basic testing whether the application is running or not 
-//http://54.224.92.5:32769/ here the port number(32769) is not opened so just opened the port manually in sg of slave machine 
-//Be careful about it when tesing another time because everything comes from the terraform 
-
-
-// Eureka container runs at 8761 port 
-// I will configure env's in a way they will have diff host ports
-// dev ==> 5761 (HP)
-// test ==> 6761 (HP)
-// stage ==> 7761 (HP)
-// Prod ==> 8761 (HP)
 
