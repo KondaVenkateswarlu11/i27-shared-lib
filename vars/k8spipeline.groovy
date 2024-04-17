@@ -1,7 +1,6 @@
 import com.i27academy.builds.Docker
 import com.i27academy.k8s.K8s
 
-library ('com.i27academy.slb')
 
 def call(Map pipelineParams) {
     Docker docker = new Docker(this)
@@ -22,8 +21,6 @@ def call(Map pipelineParams) {
             SONAR_URL = "http://54.236.253.51:9000/" 
             SONAR_TOKEN = credentials('Sonar_Token')
 
-            EKS_CLUSTER_NAME = "clothingCluster"
-            EKS_ZONE = "us-east-1"
 
         }
         parameters{
@@ -74,7 +71,7 @@ def call(Map pipelineParams) {
                 steps{
                     echo "Executing in the Aws cloud Auth Stage"
                     script{
-                        k8s.auth_login_eks("${env.EKS_CLUSTER_NAME}", "${env.EKS_ZONE}")
+                        k8s.auth_login_eks()
                     }
                 }
             }
