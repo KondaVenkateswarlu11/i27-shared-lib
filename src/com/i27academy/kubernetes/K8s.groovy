@@ -16,6 +16,6 @@ class K8s {
     kubectl get nodes
     kubectl get ns
     """
-}
+    }
 
 }
