@@ -68,8 +68,8 @@ def call(Map pipelineParams) {
         stages{
             stage("Authenticate to AwsCloud Eks"){
                 steps{
-                    echo "Executing in Aws Cloud Authentication stage"
                     script{
+                        echo "Executing in Aws Cloud Authentication stage"
                         k8s.auth_login_eks()
                     }
 
