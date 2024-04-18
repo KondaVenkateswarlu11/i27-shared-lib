@@ -17,4 +17,12 @@ class K8s{
         kubectl get nodes
         """
     }
+
+    def k8sdeploy(){
+        jenkins.sh """#!/bin/bash
+        echo "Executing K8S Deploy Method"
+        kubectl apply -f ./.cicd/k8s_dev.yaml
+        """
+    }
+
 }

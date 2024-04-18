@@ -92,7 +92,7 @@ def call(Map pipelineParams) {
                         docker.buildApp("${env.APPLICATION_NAME}")
                     }
 
-                    //-DskipTests=true 
+                    //-DskipTests=true --- to skip the unittests
                 }
             }
             stage("Unit Test"){
@@ -169,7 +169,7 @@ def call(Map pipelineParams) {
                     
                 }
             }
-            stage("Deploy to Docker-Dev"){
+            stage("Deploy Dev"){
                 when{
                     anyOf{
                         expression{
@@ -180,7 +180,10 @@ def call(Map pipelineParams) {
                 steps{
                     script{
                         imageValidation().call()
-                        dockerDeploy('dev', '5761', '8761').call()
+                        k8s.auth_login_eks("${env.EKS_DEV_CLUSTER_NAME}", "${env.EKS_DEV_REGION}")
+                        k8s.k8sdeploy()
+                        //dockerDeploy('dev', '5761', '8761').call()
+
                         echo "Deployed to Dev Successfully!!!!!!!!!"
                     }
                 }
@@ -305,18 +308,21 @@ def dockerDeploy(envDeploy, hostPort, contPort) {
 }
 
 //This methode will validate the image 
-def imageValidation(){
-    return{
-        println ("Pulling the docker image")
-        try{
-            sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
-        }
-        catch (Exception e) {
-            println("OOPS!, docker images with this tag is not available")
-            buildApp().call()
-            dockerBuildandPush().call()
-        }
+    def imageValidation(){
+        Docker docker = new Docker(this)
+        K8s k8s = new K8s(this)
 
+        return{
+            println ("Pulling the docker image")
+            try{
+                sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+            }
+            catch (Exception e) {
+                println("OOPS!, docker images with this tag is not available")
+                docker.buildApp("${env.APPLICATION_NAME}")
+                dockerBuildandPush().call()
+            }
+
+        }
     }
-}
 
