@@ -188,7 +188,7 @@ def call(Map pipelineParams) {
                 }
                 steps{
                     script{
-                        k8s.imageValidation()
+                        imageValidation().call()
                         def docker_image = "${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${env.DOCKER_IMAGE_TAG}"
                         k8s.auth_login_eks("${env.EKS_DEV_CLUSTER_NAME}", "${env.EKS_DEV_REGION}")
                         k8s.k8sdeploy("${env.K8S_DEV_FILE}", docker_image)
@@ -334,4 +334,3 @@ def imageValidation() {
         }
     }
 }
-
