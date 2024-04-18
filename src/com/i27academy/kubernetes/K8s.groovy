@@ -18,12 +18,12 @@ class K8s{
         """
     }
 
-    def k8sdeploy(fileName, docker_image){
+    def k8sdeploy(fileName, docker_image, ){
         jenkins.sh """#!/bin/bash
         echo "Executing K8S Deploy Method"
         echo "Final Image Tag is $docker_image"
         sed -i "s|DIT|$docker_image|g" ./.cicd/$fileName
-        kubectl apply -f ./.cicd/k8s_dev.yaml
+        kubectl apply -f ./.cicd/$fileName -n $namespace
         """
     }
 
