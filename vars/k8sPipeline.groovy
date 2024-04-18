@@ -1,6 +1,8 @@
 import com.i27academy.builds.Docker
 import com.i27academy.kubernetes.K8s
 
+library('com.i27academy.sharedlib')
+
 def call(Map pipelineParams) {
     Docker docker = new Docker(this)
     K8s k8s = new K8s(this)
@@ -179,7 +181,7 @@ def call(Map pipelineParams) {
                 }
                 steps{
                     script{
-                        imageValidation().call()
+                        k8s.imageValidation()
                         k8s.auth_login_eks("${env.EKS_DEV_CLUSTER_NAME}", "${env.EKS_DEV_REGION}")
                         k8s.k8sdeploy()
                         //dockerDeploy('dev', '5761', '8761').call()
@@ -307,22 +309,4 @@ def dockerDeploy(envDeploy, hostPort, contPort) {
     }
 }
 
-//This methode will validate the image 
-    def imageValidation(){
-        Docker docker = new Docker(this)
-        K8s k8s = new K8s(this)
-
-        return{
-            println ("Pulling the docker image")
-            try{
-                sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
-            }
-            catch (Exception e) {
-                println("OOPS!, docker images with this tag is not available")
-                docker.buildApp("${env.APPLICATION_NAME}")
-                dockerBuildandPush().call()
-            }
-
-        }
-    }
 
