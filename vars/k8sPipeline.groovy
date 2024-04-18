@@ -62,6 +62,8 @@ def call(Map pipelineParams) {
 
             // The above Test cluster details are for example purpose if you have clusters really 
             //with that name and in that region then it will work.
+
+             DOCKER_IMAGE_TAG = sh(script: 'git log -1 --pretty=%h', returnStdout:true)
         }
         tools{
             maven 'Maven-3.8.8'
@@ -182,6 +184,7 @@ def call(Map pipelineParams) {
                 steps{
                     script{
                         k8s.imageValidation()
+                        def docker_image = "${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${env.DOCKER_IMAGE_TAG}"
                         k8s.auth_login_eks("${env.EKS_DEV_CLUSTER_NAME}", "${env.EKS_DEV_REGION}")
                         k8s.k8sdeploy()
                         //dockerDeploy('dev', '5761', '8761').call()
