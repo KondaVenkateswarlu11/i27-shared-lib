@@ -317,22 +317,21 @@ def dockerDeploy(envDeploy, hostPort, contPort) {
     }
 }
 
-    //This methode will validate the image 
-    def imageValidation(){
-        Docker docker = new Docker(this)
-        K8s k8s = new K8s(this)
-        return{
-            println ("Pulling the docker image")
-            try{
-                sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${env.DOCKER_IMAGE_TAG}"
-            }
-            catch (Exception e) {
-                println("OOPS!, docker images with this tag is not available")
-                docker.buildApp("${env.APPLICATION_NAME}")
-                dockerBuildandPush().call()
-            }
-
+def imageValidation() {
+    Docker docker = new Docker(this)
+    K8s k8s = new K8s(this)
+    return {
+        println ("Pulling the docker image")
+        try {
+        sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${env.DOCKER_IMAGE_TAG}" 
+        }
+        catch (Exception e) {
+            println("OOPS!, docker images with this tag is not available")
+            println("LINE BEFORE ENTERING DOCKER METHOD")
+            //k8s.auth_login("${env.GKE_DEV_CLUSTER_NAME}", "${env.GKE_DEV_ZONE}", "${env.GKE_DEV_PROJECT}")
+            docker.buildApp("${env.APPLICATION_NAME}")
+            dockerBuildandPush().call()
         }
     }
-
+}
 
