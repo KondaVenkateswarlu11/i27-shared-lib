@@ -7,11 +7,11 @@ class K8s{
         this.jenkins = jenkins
     }
 
-    def auth_login_eks(){
+    def auth_login_eks(eks_cluster_name, eks_region){
         jenkins.sh """#!/bin/bash
         echo "Entering Authentication method for EKS Cluster Login"
         # Update kubeconfig with EKS cluster details
-        aws eks --region us-east-1 update-kubeconfig --name eurekaCluster
+        aws eks --region $eks_region update-kubeconfig --name $eks_cluster_name
         echo "************* Listing Number of Nodes in EKS *************"
         # List the nodes in the EKS cluster
         kubectl get nodes

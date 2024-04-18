@@ -49,6 +49,17 @@ def call(Map pipelineParams) {
 
             SONAR_URL = "http://54.236.253.51:9000/" 
             SONAR_TOKEN = credentials('Sonar_Token')
+
+            EKS_DEV_CLUSTER_NAME = "eurekaCluster"
+            EKS_DEV_REGION = "us-east-1"
+            
+            //IN the same way you can add for test stage and prod environments if you have
+            // different clusters for diffrent environments like: 
+            EKS_TEST_CLUSTER_NAME = "eurekaCluster-Test"
+            EKS_TEST_REGION = "us-west-1"
+
+            // The above Test cluster details are for example purpose if you have clusters really 
+            //with that name and in that region then it will work.
         }
         tools{
             maven 'Maven-3.8.8'
@@ -59,8 +70,7 @@ def call(Map pipelineParams) {
                 steps {
                     echo "Executing in AWS Cloud auth stage"
                     script {
-                        //eks_cluster_name, eks_zone
-                        k8s.auth_login_eks()
+                        k8s.auth_login_eks("${env.EKS_DEV_CLUSTER_NAME}", "${env.EKS_DEV_REGION}")
                     }  
                 }
             }
