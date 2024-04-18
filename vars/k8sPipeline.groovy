@@ -54,20 +54,15 @@ def call(Map pipelineParams) {
 
             EKS_DEV_CLUSTER_NAME = "eurekaCluster"
             EKS_DEV_REGION = "us-east-1"
-        /*IN the same way you can add for test stage and prod environments if you have different 
-        clusters for diffrent environments like same way for stage and prod */
         
             EKS_TEST_CLUSTER_NAME = "eurekaCluster-Test"
             EKS_TEST_REGION = "us-west-1"
             
-            EKS_STAGE_CLUSTER_NAME = "eurekaCluster-Test"
+            EKS_STAGE_CLUSTER_NAME = "eurekaCluster-Stage"
             EKS_STAGE_REGION = "us-west-1"
 
-            EKS_PROD_CLUSTER_NAME = "eurekaCluster-Test"
+            EKS_PROD_CLUSTER_NAME = "eurekaCluster-Prod"
             EKS_PROD_REGION = "us-west-1"
-
-
-
 
             DOCKER_IMAGE_TAG = sh(script: 'git log -1 --pretty=%h', returnStdout:true).trim()
 
@@ -79,9 +74,8 @@ def call(Map pipelineParams) {
 
             DEV_NAMESPACE = "cart-dev-ns"
             TEST_NAMESPACE = "cart-test-ns"
-
-
-
+            STAGE_NAMESPACE = "cart-stage-ns"
+            PROD_NAMESPACE = "cart-prod-ns"
 
 
         }
