@@ -317,4 +317,22 @@ def dockerDeploy(envDeploy, hostPort, contPort) {
     }
 }
 
+    //This methode will validate the image 
+    def imageValidation(){
+        Docker docker = new Docker(this)
+        K8s k8s = new K8s(this)
+        return{
+            println ("Pulling the docker image")
+            try{
+                sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${env.DOCKER_IMAGE_TAG}"
+            }
+            catch (Exception e) {
+                println("OOPS!, docker images with this tag is not available")
+                docker.buildApp("${env.APPLICATION_NAME}")
+                dockerBuildandPush().call()
+            }
+
+        }
+    }
+
 
