@@ -56,11 +56,21 @@ def call(Map pipelineParams) {
             EKS_DEV_REGION = "us-east-1"
         /*IN the same way you can add for test stage and prod environments if you have different 
         clusters for diffrent environments like same way for stage and prod */
+        
             EKS_TEST_CLUSTER_NAME = "eurekaCluster-Test"
             EKS_TEST_REGION = "us-west-1"
             
+            EKS_STAGE_CLUSTER_NAME = "eurekaCluster-Test"
+            EKS_STAGE_REGION = "us-west-1"
+
+            EKS_PROD_CLUSTER_NAME = "eurekaCluster-Test"
+            EKS_PROD_REGION = "us-west-1"
+
+
+
 
             DOCKER_IMAGE_TAG = sh(script: 'git log -1 --pretty=%h', returnStdout:true).trim()
+
             K8S_DEV_FILE = "k8s_dev.yaml"
             K8S_TEST_FILE = "k8s_test.yaml"
             K8S_STAGE_FILE = "k8s_stage.yaml"
@@ -69,6 +79,7 @@ def call(Map pipelineParams) {
 
             DEV_NAMESPACE = "cart-dev-ns"
             TEST_NAMESPACE = "cart-test-ns"
+
 
 
 
@@ -196,8 +207,6 @@ def call(Map pipelineParams) {
                         def docker_image = "${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${env.DOCKER_IMAGE_TAG}"
                         k8s.auth_login_eks("${env.EKS_DEV_CLUSTER_NAME}", "${env.EKS_DEV_REGION}")
                         k8s.k8sdeploy("${env.K8S_DEV_FILE}", docker_image, "${env.DEV_NAMESPACE}")
-                        //dockerDeploy('dev', '5761', '8761').call()
-
                         echo "Deployed to Dev Successfully!!!!!!!!!"
                     }
                 }
@@ -221,7 +230,7 @@ def call(Map pipelineParams) {
                 }
             }
 
-            stage("Deploy to Docker-stage"){
+            stage("Deploy to Stage"){
                 when{
                     anyOf{
                         expression{
@@ -232,11 +241,14 @@ def call(Map pipelineParams) {
                 steps{
                     script{
                         imageValidation().call()
-                        dockerDeploy('stage', '7761', '8761').call()
+                        def docker_image = "${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${env.DOCKER_IMAGE_TAG}"
+                        k8s.auth_login_eks("${env.EKS_STAGE_CLUSTER_NAME}", "${env.EKS_STAGE_REGION}")
+                        k8s.k8sdeploy("${env.K8S_STAGE_FILE}", docker_image, "${env.STAGE_NAMESPACE}")
+                        echo "Deployed to Stage Successfully!!!!!!!!!"
                     }
                 }
             }
-            stage("Deploy to Docker-prod"){
+            stage("Deploy to Prod"){
                 when {
                     // deployToProd === yes "and" branch "release/*****" 
                     allOf {
@@ -258,7 +270,10 @@ def call(Map pipelineParams) {
                     }
                     script{
                         imageValidation().call()
-                        dockerDeploy('prod', '8761', '8761').call()
+                        def docker_image = "${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${env.DOCKER_IMAGE_TAG}"
+                        k8s.auth_login_eks("${env.EKS_PROD_CLUSTER_NAME}", "${env.EKS_PROD_REGION}")
+                        k8s.k8sdeploy("${env.K8S_PROD_FILE}", docker_image, "${env.PROD_NAMESPACE}")
+                        echo "Deployed to Prod Successfully!!!!!!!!!"
                     }
                 }
             }
