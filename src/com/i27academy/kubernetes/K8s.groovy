@@ -27,20 +27,6 @@ class K8s{
         """
     }
 
-    //This methode will validate the image 
-    def imageValidation(){
-        return{
-            println ("Pulling the docker image")
-            try{
-                sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${env.DOCKER_IMAGE_TAG}"
-            }
-            catch (Exception e) {
-                println("OOPS!, docker images with this tag is not available")
-                docker.buildApp("${env.APPLICATION_NAME}")
-                dockerBuildandPush().call()
-            }
 
-        }
-    }
 
 }
