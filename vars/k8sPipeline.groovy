@@ -52,7 +52,7 @@ def call(Map pipelineParams) {
             SONAR_URL = "http://54.236.253.51:9000/" 
             SONAR_TOKEN = credentials('Sonar_Token')
 
-            EKS_DEV_CLUSTER_NAME = "eurekaCluster"
+            EKS_DEV_CLUSTER_NAME = "reactCluster"
             EKS_DEV_REGION = "us-east-1"
         
             EKS_TEST_CLUSTER_NAME = "eurekaCluster-Test"
