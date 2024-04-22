@@ -234,7 +234,7 @@ def call(Map pipelineParams) {
                         def docker_image = "${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${env.DOCKER_IMAGE_TAG}"
                         k8s.auth_login_eks("${env.EKS_DEV_CLUSTER_NAME}", "${env.EKS_DEV_REGION}")
                         //k8s.k8sdeploy("${env.K8S_DEV_FILE}", docker_image, "${env.DEV_NAMESPACE}")
-                         k8s.k8sHelmChartDeploy("${env.APPLICATION_NAME}", "${env.TEST_ENV}", "${env.HELM_PATH}" , "${env.DOCKER_IMAGE_TAG}")
+                        k8s.k8sHelmChartDeploy("${env.APPLICATION_NAME}", "${env.TEST_ENV}", "${env.HELM_PATH}" , "${env.DOCKER_IMAGE_TAG}")
                         echo "Deployed to Test Successfully!!!!!!!!!"
                     }
                 }
