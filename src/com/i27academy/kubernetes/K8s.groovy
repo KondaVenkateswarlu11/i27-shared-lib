@@ -26,7 +26,4 @@ class K8s{
         kubectl apply -f ./.cicd/$fileName -n $namespace
         """
     }
-
-
-
 }
