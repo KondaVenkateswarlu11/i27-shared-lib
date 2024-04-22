@@ -84,7 +84,7 @@ def call(Map pipelineParams) {
 
             JFROG_DOCKER_REGISTRY = "flipcart.jfrog.io"
             JFROG_DOCKER_REPO_NAME = "images-docker"
-            JFROG_CREDS = credentials('JFROG_CREDS') // tokens configure this creds firts in jenkins
+            JFROG_CREDS = credentials('JFROG_CREDS') //configure this creds firts in jenkins
 
 
         }

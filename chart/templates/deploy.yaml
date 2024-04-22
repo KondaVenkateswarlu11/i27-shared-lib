@@ -12,6 +12,9 @@ spec:
       labels:
         name: {{ .Values.name }}
     spec:
+      imagePullSecrets:
+      - name: private-jfrog-registry #the secret with this name should be present in the cluster
+      # This is how we can pass the secrets in the deploy file
       containers:
         - name: {{ .Values.name }}
         # the below image should be dynamically change based on the devlelopment 
