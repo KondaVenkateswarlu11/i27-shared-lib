@@ -26,4 +26,27 @@ class K8s{
         kubectl apply -f ./.cicd/$fileName -n $namespace
         """
     }
+
+     def k8sHelmChartDeploy(){
+       jenkins.sh """#!/bin/bash
+       echo "*************** Helm Groovy method Starts here ***************"
+       
+       """
+
+     }
+
+    //This Methode will clone the sharedLib repo to the Eureka folder to maintaina all the files
+    // in the same location for the further uses.
+     def gitClone() {
+       jenkins.sh """#!/bin/bash
+       echo "*************** Entering Git Clone Method ***************"
+       git clone -b master https://github.com/KondaVenkateswarlu11/i27-shared-lib.git
+       echo "Listing the files"
+       ls -la 
+       echo "Showing the files under i27-shared-lib repo"
+       ls -la i27-shared-lib
+       echo "Showing the files under chart folder"
+       ls -la i27-shared-lib/chart/
+       """ 
+    }
 }
