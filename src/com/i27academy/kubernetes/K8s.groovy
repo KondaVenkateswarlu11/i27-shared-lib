@@ -27,6 +27,8 @@ class K8s{
         """
     }
 
+//This method will install the helm chart for the first time
+// From next onwards it will upgrade the chrt that is all about this method
      def k8sHelmChartDeploy(appName, env, helmChartPath, imageTag){
        jenkins.sh """#!/bin/bash
        echo "*************** Helm Groovy method Starts here ***************"
